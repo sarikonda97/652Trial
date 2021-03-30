@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <windows.h>
-#define MIN_LENGTH 5
+#define MIN_LENGTH 3
 #define MAP_SIZE 100
 #define MAP_LENGTH 14
 #define MAP_WIDTH 16
@@ -33,6 +33,7 @@ struct room* makeRoom(int x, int y, int width, int depth); //prototype
 void partition(struct room* newRoom){ // splitting room newRoom into two subRoom
 	int door;
 	if(newRoom->width >= newRoom->depth && newRoom->width > MIN_LENGTH*2){ // deciding if room should be divided vertically or horizontally
+		printf("Entered if under minlength");
 		int x; // room divided vertically ex [   ] -> [ | ]
 		do{
 			x = rand() % newRoom->width; //deciding where the room will be split using random

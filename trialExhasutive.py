@@ -30,10 +30,21 @@ def find_slice(big_array, small_array, complex, base, noOfSamples):
   else:
     return results
 
-def select_from_result(result, cordinates, final):
+def introduceCoCreativity(results, mode):
+  if mode == "first":
+    return results[0]
+  if mode == "last":
+    return results[-1]
+  # write something for max enemies
+  
+
+def select_from_result(result, cordinates, final, mode):
     #for now printing first element of the result
+    print("the number of outputs identified")
+    print(len(result))
     print("This is the output")
-    selected = result[0]
+    # selected = result[0]
+    selected = introduceCoCreativity(result, mode)
     print(selected)
     k = 0;
     for i in range(cordinates["top-left"][0], cordinates["bottom-left"][0]+1):
@@ -64,25 +75,27 @@ with open("inputBase.txt","rt") as infile:
 print(base)
     
 # loading all training full resolutions
+sampleSize = 92
 full = []
-for trainingCount in range(0, 11):
+for trainingCount in range(0, sampleSize):
   with open("./training/original/full" + str(trainingCount) + ".txt","rt") as infile:
     full.append(np.matrix([list(line.strip('\n')) for line in infile.readlines()]))
     
 # loading all training sketch resolutions
 sketch = []
-for trainingCount in range(0, 11):
+for trainingCount in range(0, sampleSize):
   with open("./training/sketch/sketch" + str(trainingCount) + ".txt","rt") as infile:
     sketch.append(np.matrix([list(line.strip('\n')) for line in infile.readlines()]))
 
 # initializing final output file
 final = np.empty([14,16], dtype="str")
 
+coCreativityMode = 'last'
 # main driver code
 for subsection in range(0, number_files):
   with open("./subsections/subSection" + str(subsection) + ".txt","rt") as infile:
     sub_matrix =  np.matrix([list(line.strip('\n')) for line in infile.readlines()])
-    select_from_result(find_slice(sketch, sub_matrix, full, base, 11), cordinates[subsection], final)
+    select_from_result(find_slice(sketch, sub_matrix, full, base, sampleSize), cordinates[subsection], final, coCreativityMode)
 
 print(final)
 f = open("./finalSection.txt", "w")
