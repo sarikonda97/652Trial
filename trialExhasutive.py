@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 import os, os.path
+import random
 
 def check(a, b, upper_left):
     ul_row = upper_left[0]
@@ -35,7 +36,27 @@ def introduceCoCreativity(results, mode):
     return results[0]
   if mode == "last":
     return results[-1]
+  if mode == "random":
+    return random.choice(results)
   # write something for max enemies
+  if mode == "maxEnemies":
+    index = 0
+    enemyCount = 0
+    maxIndex = 0
+    maxEnemyCount = 0
+    for result in results:   
+      unique, counts = np.unique(result, return_counts=True)
+      uniqueList = np.array(unique).reshape(-1,).tolist()
+      # countList = counts.tolist()
+      for i in range(0, len(uniqueList)):
+        if uniqueList[i] == 'H' or uniqueList[i] == 'E':
+          # enemyCount += countList[i]
+          enemyCount += 1
+      if enemyCount > maxEnemyCount:
+        maxEnemyCount = enemyCount
+        maxIndex=index
+      index+=1
+    return results[maxIndex]
   
 
 def select_from_result(result, cordinates, final, mode):
@@ -75,7 +96,7 @@ with open("inputBase.txt","rt") as infile:
 print(base)
     
 # loading all training full resolutions
-sampleSize = 92
+sampleSize = 282
 full = []
 for trainingCount in range(0, sampleSize):
   with open("./training/original/full" + str(trainingCount) + ".txt","rt") as infile:
@@ -98,7 +119,7 @@ for subsection in range(0, number_files):
     select_from_result(find_slice(sketch, sub_matrix, full, base, sampleSize), cordinates[subsection], final, coCreativityMode)
 
 print(final)
-f = open("./finalSection.txt", "w")
+f = open("./generatedSections/finalSection.txt", "w")
 for i in range(final.shape[0]):
     for j in range(final.shape[1]):
         f.write(final[i,j])
