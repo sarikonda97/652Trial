@@ -1,0 +1,14 @@
+----------------
+--H--------X----
+MMMTTTTXXXXXMMMM
+----------------
+----------------
+XXXX----TXXXSSSS
+XXXX--------SSSS
+XXXX--------SSSS
+TTT###SSS---EXXX
+####--------XXXX
+####--------XXXX
+####-----SSSXXXX
+####--------XXXX
+####--------XXXX

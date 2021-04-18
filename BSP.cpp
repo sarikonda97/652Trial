@@ -8,6 +8,8 @@
 #define MAP_WIDTH 16
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <sstream>
 using namespace std;
 
 struct room{ //room containing room data
@@ -133,8 +135,13 @@ void printMapStimulation(){ //printMap for Stimulation
 	}
 }
 
-void printMap(){ // print map
-	ofstream MyFile("partition.txt");
+void printMap(int partitionCount){ // print map
+	string count;
+	stringstream ss;  
+	ss << partitionCount;  
+	ss >> count;
+	string fileLoc = "partitions/partition" +  count + ".txt";
+	ofstream MyFile(fileLoc.c_str());
 	for(int i = 0; i < MAP_LENGTH; i++){
 		for(int j = 0; j < MAP_WIDTH; j++){
 			if(map[j][i].isDoorV){ //door
@@ -188,22 +195,28 @@ void stimulation(){ //stimulation for splitting step by step
 }
 
 int main(){ //main function
-	srand(time(NULL)); //initialize random
-	root = makeRoom(0, 0, MAP_LENGTH, MAP_WIDTH); //make first room and the child with split in the function
-	//for stimulation
-	stimulation(); 
-	
-	//creating wall
-	makeWall(root);
-	
-	printf("DONE!\n");
-	//printing map
-	printMap();
-	
-	//freeing data
-	freeAll(root);
-	
-	//done
-	getchar();
+	int i;
+	for (i=281; i<283; i++)
+	{
+		srand(time(NULL)); //initialize random
+		root = makeRoom(0, 0, MAP_LENGTH, MAP_WIDTH); //make first room and the child with split in the function
+		//for stimulation
+		stimulation(); 
+		
+		//creating wall
+		makeWall(root);
+		
+		printf("DONE!\n");
+		//printing map
+		printMap(i);
+		
+		//freeing data
+		freeAll(root);
+		
+		//done
+		getchar();
+//Sleep(2000);         // wait for 2 seconds before closing
+
+	}
 	return 0;
 }

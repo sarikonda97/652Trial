@@ -1,0 +1,14 @@
+----------------
+----------------
+ooooooooo##SSSSS
+SSSSooooS##SSSSS
+SSSSSSSSS##SSSSS
+SSSSSSSSSSS?SSSS
+S---------------
+S---------------
+-?oooooooooo----
+-oooSSS###SS----
+---------------X
+--------------XX
+--------##---XXX
+XXXXooo###XXXXXX

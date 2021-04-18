@@ -14,7 +14,7 @@ def check(a, b, upper_left):
         return False
     return (a_slice == b).all() # here also need to return the parent matric slice
 
-def find_slice(big_array, small_array, complex, base, noOfSamples):
+def find_slice(big_array, small_array, complex, base, noOfSamples, coordinates):
   results = []
   for sample in range(0, noOfSamples):
     upper_left = np.argwhere(big_array[sample] == small_array[0,0])
@@ -28,7 +28,9 @@ def find_slice(big_array, small_array, complex, base, noOfSamples):
           # print(ul)
   if(len(results)==0):
     #if not found in basic matrix return from base matrix
-    return base[:len(small_array),:len(small_array[0])+1]
+    contingency = []
+    contingency.append(base[coordinates["top-left"][0]:coordinates["top-left"][0] + small_array.shape[0],coordinates["top-left"][1]:coordinates["top-left"][1] + small_array.shape[1]])  # this line might be buggy)
+    return contingency
   else:
     return results
 
@@ -194,51 +196,60 @@ def select_from_result(result, cordinates, final, mode):
     # 	print(result[i])
     # print("\n")
 
-cordinatesFile = open("./subsections/cordinates", "rb")
-cordinates = pickle.load(cordinatesFile)
-print(cordinates)
 
 
-print("No of files")
-listFiles = os.listdir('./subsections') # dir is your directory path
-number_files = len(listFiles)
-number_files -= 1 #removing the cordinates file
-print (number_files)
 
-# loading base
-with open("inputBase.txt","rt") as infile:
-    base =  np.matrix([list(line.strip('\n')) for line in infile.readlines()])
-  
-print(base)
+
+for inst in range(0,283):  # for individual change here
+  cordinatesFile = open("./subsections/sketch" + str(inst) + "/cordinates", "rb")
+  cordinates = pickle.load(cordinatesFile)
+  print(cordinates)
+
+
+  print("No of files")
+  listFiles = os.listdir("./subsections/sketch"+ str(inst)) # dir is your directory path
+  number_files = len(listFiles)
+  number_files -= 1 #removing the cordinates file
+  print (number_files)
+
+  # loading base
+  with open("training/original/full" + str(inst) + ".txt","rt") as infile:
+      base =  np.matrix([list(line.strip('\n')) for line in infile.readlines()])
     
-# loading all training full resolutions
-sampleSize = 282
-full = []
-for trainingCount in range(0, sampleSize):
-  with open("./training/original/full" + str(trainingCount) + ".txt","rt") as infile:
-    full.append(np.matrix([list(line.strip('\n')) for line in infile.readlines()]))
-    
-# loading all training sketch resolutions
-sketch = []
-for trainingCount in range(0, sampleSize):
-  with open("./training/sketch/sketch" + str(trainingCount) + ".txt","rt") as infile:
-    sketch.append(np.matrix([list(line.strip('\n')) for line in infile.readlines()]))
+  print(base)
+      
+  # loading all training full resolutions
+  sampleSize = 283
+  full = []
+  for trainingCount in range(0, sampleSize):
+    if trainingCount == inst:
+      continue
+    with open("./training/original/full" + str(trainingCount) + ".txt","rt") as infile:
+      full.append(np.matrix([list(line.strip('\n')) for line in infile.readlines()]))
+      
+  # loading all training sketch resolutions
+  sketch = []
+  for trainingCount in range(0, sampleSize):
+    if trainingCount == inst:
+      continue
+    with open("./training/sketch/sketch" + str(trainingCount) + ".txt","rt") as infile:
+      sketch.append(np.matrix([list(line.strip('\n')) for line in infile.readlines()]))
 
-# initializing final output file
-final = np.empty([14,16], dtype="str")
+  # initializing final output file
+  final = np.empty([14,16], dtype="str")
 
-coCreativityMode = 'maxReward'
-# main driver code
-for subsection in range(0, number_files):
-  with open("./subsections/subSection" + str(subsection) + ".txt","rt") as infile:
-    sub_matrix =  np.matrix([list(line.strip('\n')) for line in infile.readlines()])
-    select_from_result(find_slice(sketch, sub_matrix, full, base, sampleSize), cordinates[subsection], final, coCreativityMode)
+  coCreativityMode = 'maxReward'
+  # main driver code
+  for subsection in range(0, number_files):
+    with open("./subsections/sketch" + str(inst) + "/subSection" + str(subsection) + ".txt","rt") as infile:
+      sub_matrix =  np.matrix([list(line.strip('\n')) for line in infile.readlines()])
+      select_from_result(find_slice(sketch, sub_matrix, full, base, sampleSize-1, cordinates[subsection]), cordinates[subsection], final, coCreativityMode)
 
-print(final)
-f = open("./generatedSections/finalSection.txt", "w")
-for i in range(final.shape[0]):
-    for j in range(final.shape[1]):
-        f.write(final[i,j])
-    f.write("\n")
-f.close()
+  print(final)
+  f = open("./generatedSections/finalSection" + str(inst) + ".txt", "w")
+  for i in range(final.shape[0]):
+      for j in range(final.shape[1]):
+          f.write(final[i,j])
+      f.write("\n")
+  f.close()
 

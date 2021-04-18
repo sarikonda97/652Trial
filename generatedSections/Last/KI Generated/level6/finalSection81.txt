@@ -1,0 +1,14 @@
+------TTT-------
+---D###--TXX----
+---DXXX---XXXX--
+-TTTXXX---XXXX--
+---#XXXX--XXXX--
+----XXXX--XXXX--
+----XXXX--XXXX--
+----XXXX-XXXXXXX
+----[]##--#XXX--
+----[]##--#XXX--
+----XXTTT-#XXX--
+----------#XXX--
+----------#XXX--
+---------TTXXX--
